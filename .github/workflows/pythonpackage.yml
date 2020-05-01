@@ -13,6 +13,7 @@ on:
 
 jobs:
   build:
+    if: github.actor == github.event.repository.owner.login || github.event_name == 'push'
 
     runs-on: ubuntu-latest
     strategy:
@@ -26,7 +27,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-#      if: github.actor == github.event.repository.owner.login || github.event_name == 'push'
       run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
@@ -36,7 +36,6 @@ jobs:
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      if: github.actor == github.event.repository.owner.login || github.event_name == 'push'
       run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
