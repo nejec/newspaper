@@ -6,8 +6,10 @@ name: Python package
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  watch:
+    types: [started]
+#  pull_request:
+#    branches: [ master ]
 
 jobs:
   build:
@@ -25,17 +27,21 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if github.actor == github.event.repository.owner.login || GITHUB_EVENT_NAME == push
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        fi
 #        pip install flake8 pytest
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
+        if github.actor == github.event.repository.owner.login || GITHUB_EVENT_NAME == push
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+        fi
 #    - name: Lint with flake8
 #      run: |
 #        # stop the build if there are Python syntax errors or undefined names
