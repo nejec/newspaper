@@ -37,6 +37,19 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
+          echo "    [distutils]" >> ~/.pypirc
+          echo "    index-servers=" >> ~/.pypirc
+          echo "        pypi" >> ~/.pypirc
+          echo "        testpypi" >> ~/.pypirc
+          echo "" >> ~/.pypirc
+          echo "    [pypi]" >> ~/.pypirc
+          echo "    username: ${{ secrets.PYPI_USERNAME }}" >> ~/.pypirc
+          echo "    password: ${{ secrets.PYPI_PASSWORD }}" >> ~/.pypirc
+          echo "" >> ~/.pypirc
+          echo "    [testpypi]" >> ~/.pypirc
+          echo "    repository: https://test.pypi.org/legacy/" >> ~/.pypirc
+          echo "    username: ${{ secrets.PYPI_USERNAME }}" >> ~/.pypirc
+          echo "    password: ${{ secrets.PYPI_PASSWORD }}" >> ~/.pypirc
           python setup.py sdist bdist_wheel
           twine upload dist/*
 #    - name: Lint with flake8
