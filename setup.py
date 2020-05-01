@@ -46,7 +46,7 @@ with codecs.open('README.rst', 'r', 'utf-8') as f:
 
 
 setup(
-    name='enliven.systems/newspaper3k',
+    name='enlivensystems/newspaper3k',
     version='0.3.0',
     description='Simplified python article discovery & extraction.',
     long_description=readme,
