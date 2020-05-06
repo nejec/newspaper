@@ -11,11 +11,13 @@ __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import feedparser
 
-from .article import Article
+from .article import Article, ArticleException
 from .configuration import Configuration
 from .settings import POPULAR_URLS, TRENDING_URL
 from .source import Source
 from .utils import extend_config, print_available_languages
+import json
+import sys
 
 
 def build(url='', dry=False, config=None, **kwargs) -> Source:
@@ -91,3 +93,55 @@ def fulltext(html, language='en'):
     top_node = extractor.post_cleanup(top_node)
     text, article_html = output_formatter.get_formatted(top_node)
     return text
+
+
+def extract(request, context):
+    try:
+        data = json.loads(request['data'].decode('utf-8'))
+        article = Article(data['link'], language='hu')
+        article.download(input_html=data['content'])
+        article.parse()
+        if article.publish_date:
+                publish_date_str = article.publish_date.strftime("%Y%m%d-%H:%M:%S")
+        else:
+                publish_date_str = 'None'
+        result = {
+                'title': article.title,
+                'text': article.text,
+                'publish_date': publish_date_str,
+                'status': 0
+                }
+    except ArticleException:
+        result = {
+                'status': 1,
+                'error': str(sys.exc_info()[1].with_traceback(
+                        sys.exc_info()[2])) + ' Maybe content is empty?',
+                'type': str('ArticleException')
+                }
+    except TypeError:
+        result = {
+                'status': 1,
+                'error': 'The type of an argument is not correct. ' +
+                    str(sys.exc_info()[1].with_traceback(sys.exc_info()[2])),
+                'type': 'TypeError'
+                }
+    except KeyError:
+        result = {
+                'status': 1,
+                'error': 'A key is missing from the request. ' +
+                    str(sys.exc_info()[1].with_traceback(sys.exc_info()[2])),
+                'type': str('KeyError')
+                }
+    except AttributeError:
+        result = {
+                'status': 1,
+                'error': str(sys.exc_info()[1].with_traceback(sys.exc_info()[2])),
+                'type': str('AttributeError')
+                }
+    except:
+        result = {
+                'status': 1,
+                'error': str(sys.exc_info()[1].with_traceback(sys.exc_info()[2])),
+                'type': str(sys.exc_info()[0])
+                }
+    return json.dumps(result)

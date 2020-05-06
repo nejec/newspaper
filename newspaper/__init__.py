@@ -8,7 +8,7 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 from .api import (build, build_article, fulltext, hot, languages,
-                  popular_urls, Configuration as Config)
+                  popular_urls, extract, Configuration as Config)
 from .article import Article, ArticleException
 from .mthreading import NewsPool
 from .source import Source
