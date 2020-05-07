@@ -50,6 +50,15 @@ bad_chunks = ['careers', 'contact', 'about', 'faq', 'terms', 'privacy',
               'advert', 'preferences', 'feedback', 'info', 'browse', 'howto',
               'account', 'subscribe', 'donate', 'shop', 'admin']
 bad_domains = ['amazon', 'doubleclick', 'twitter']
+bad_attributes=['tag', 'photographer', 'related-post', 'read-more', 'caption',
+                'author', 'category', 'ads_', 'advertisement',
+                'image-holder', 'image-text', 'header', 'article-image',
+                'datum', 'banner', 'adzone_', 'tweet', 'artbody-head',
+                'article_image', 'adspot', 'cikkhead', 'video', 'img-wrap',
+                'details', 'szerzo', 'lapszam', 'alert', 'pr-box',
+                'calculator', 'description', 'Title', 'ArticleTitle',
+                'gallery', 'mainSource', 'source', 'Source', 'article-series',
+                'disqus', 'donate']
 
 
 CATEGORY_STOPWORDS = [
@@ -820,7 +829,7 @@ class ContentExtractor(object):
             # boost
             if self.is_boostable(node):
                 if cnt >= 0:
-                    boost_score = float((1.0 / starting_boost) * 50)
+                    boost_score = float((1.0 / starting_boost) * 90)
                     starting_boost += 1
             # nodes_number
             if nodes_number > 15:
@@ -994,7 +1003,7 @@ class ContentExtractor(object):
         new_score = current_score + add_to_count
         self.parser.setAttribute(node, "gravityNodes", str(new_score))
 
-    def is_highlink_density(self, e):
+    def is_highlink_density(self, e, minimum_density_score = 1.0):
         """Checks the density of links within a node, if there is a high
         link to text ratio, then the text is less likely to be relevant
         """
@@ -1017,7 +1026,7 @@ class ContentExtractor(object):
         num_links = float(len(links))
         link_divisor = float(num_link_words / words_number)
         score = float(link_divisor * num_links)
-        if score >= 1.0:
+        if score >= minimum_density_score:
             return True
         return False
         # return True if score > 1.0 else False
@@ -1074,4 +1083,28 @@ class ContentExtractor(object):
             if e_tag != 'p':
                 if self.is_highlink_density(e):
                     self.parser.remove(e)
+            self.post_cleanup_extension(e)
+            #if self.is_highlink_density_2(e):
+                #self.parser.remove(e)
         return node
+
+    def post_cleanup_extension(self, e):
+        attributes = self.parser.getAttribute(e, 'class')
+        e_tag = self.parser.getTag(e)
+        ids = self.parser.getAttribute(e, 'id')
+        if attributes:
+            if any(map(lambda attr: attributes.find(attr) != -1,
+                       bad_attributes)):
+                self.parser.remove(e)
+        if self.is_highlink_density(e, 1.5):
+            self.parser.remove(e)
+        if ids:
+            if any(map(lambda attr: ids.find(attr) != -1,
+                       bad_attributes)):
+                self.parser.remove(e)
+        if any(map(lambda attr: e_tag.find(attr) != -1,
+                       bad_attributes)):
+            self.parser.remove(e)
+        for f in self.parser.getChildren(e):
+            self.post_cleanup_extension(f)
+
