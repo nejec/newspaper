@@ -50,7 +50,7 @@ bad_chunks = ['careers', 'contact', 'about', 'faq', 'terms', 'privacy',
               'advert', 'preferences', 'feedback', 'info', 'browse', 'howto',
               'account', 'subscribe', 'donate', 'shop', 'admin']
 bad_domains = ['amazon', 'doubleclick', 'twitter']
-bad_attributes=['tag', 'photographer', 'related-post', 'read-more', 'caption',
+bad_attributes = ['tag', 'photographer', 'related-post', 'read-more', 'caption',
                 'author', 'category', 'ads_', 'advertisement',
                 'image-holder', 'image-text', 'header', 'article-image',
                 'datum', 'banner', 'adzone_', 'tweet', 'artbody-head',
@@ -59,6 +59,7 @@ bad_attributes=['tag', 'photographer', 'related-post', 'read-more', 'caption',
                 'calculator', 'description', 'Title', 'ArticleTitle',
                 'gallery', 'mainSource', 'source', 'Source', 'article-series',
                 'disqus', 'donate']
+caption_strings = ['image', 'picture', 'fotó', 'borító', 'címlap']
 
 
 CATEGORY_STOPWORDS = [
@@ -1084,6 +1085,8 @@ class ContentExtractor(object):
                 if self.is_highlink_density(e):
                     self.parser.remove(e)
             self.post_cleanup_extension(e)
+            if self.is_irrelevant_caption(e):
+                self.parser.remove(e)
         return node
 
     def post_cleanup_extension(self, e):
@@ -1106,3 +1109,23 @@ class ContentExtractor(object):
         for f in self.parser.getChildren(e):
             self.post_cleanup_extension(f)
 
+    def is_irrelevant_caption(self, e):
+        """Checks the density of caption_words within a node, if there is a
+        high caption_words to text ratio, then the text is less likely to be
+        relevant
+        """
+
+        text = self.parser.getText(e)
+        words = [word for word in text.split()]
+        if not words or len(text) > 100:
+            return False
+        words_number = float(len(words))
+        caption_words = list(filter(lambda word: any(map(lambda capt:
+            word.lower().find(capt.lower()) != -1, caption_strings)), words))
+        caption_text = ''.join(caption_words)
+        num_caption_words = float(len(caption_words))
+        caption_divisor = float(num_caption_words / words_number)
+        length_divisor = float(len(caption_text) / len(text))
+        if caption_divisor >= 0.2 or length_divisor >= 0.2:
+            return True
+        return False
