@@ -1084,8 +1084,6 @@ class ContentExtractor(object):
                 if self.is_highlink_density(e):
                     self.parser.remove(e)
             self.post_cleanup_extension(e)
-            #if self.is_highlink_density_2(e):
-                #self.parser.remove(e)
         return node
 
     def post_cleanup_extension(self, e):
