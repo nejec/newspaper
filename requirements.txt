@@ -10,9 +10,14 @@ pythainlp>=1.7.2
 python-dateutil>=2.5.3
 PyYAML>=3.11
 requests>=2.10.0
+<<<<<<< HEAD
 tinysegmenter==0.3
 tldextract>=2.0.1
 yake>=git+https://github.com/LIAAD/yake.git
 pandas>=0.25.3
 fastapi
 uvicorn
+=======
+tinysegmenter==0.3  # TODO(codelucas): Investigate making this >=0.3
+tldextract>=2.0.1
+>>>>>>> a0f7253 (Dropping python 3.4 support (#768))
