@@ -58,7 +58,7 @@ bad_attributes = ['tag', 'photographer', 'related-post', 'read-more', 'caption',
                 'details', 'szerzo', 'lapszam', 'alert', 'pr-box',
                 'calculator', 'description', 'Title', 'ArticleTitle',
                 'gallery', 'mainSource', 'source', 'Source', 'article-series',
-                'disqus', 'donate']
+                'disqus', 'donate', 'pr2020kra']
 caption_strings = ['image', 'picture', 'fotó', 'borító', 'címlap']
 
 
