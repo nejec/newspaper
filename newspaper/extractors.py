@@ -58,7 +58,7 @@ bad_attributes = ['tag', 'photographer', 'related-post', 'read-more', 'caption',
                 'details', 'szerzo', 'lapszam', 'alert', 'pr-box',
                 'calculator', 'description', 'Title', 'ArticleTitle',
                 'gallery', 'mainSource', 'source', 'Source', 'article-series',
-                'disqus', 'donate', 'pr2020kra']
+                'disqus', 'donate', 'pr2020kra', 'bmi-calculator', 'bmi-description']
 caption_strings = ['image', 'picture', 'fotó', 'borító', 'címlap']
 
 
@@ -949,6 +949,10 @@ class ContentExtractor(object):
                         if score < paragraph_score and not high_link_density:
                             p = self.parser.createElement(
                                 tag='p', text=text, tail=None)
+                            attributes = self.parser.getAttribute(first_paragraph, 'class')
+                            self.parser.setAttribute(p, attr = 'class', value = attributes)
+                            ids = self.parser.getAttribute(first_paragraph, 'id')
+                            self.parser.setAttribute(p, attr = 'id', value = ids)
                             ps.append(p)
                 return ps
 
