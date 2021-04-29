@@ -95,11 +95,15 @@ def fulltext(html, language='en'):
     text, article_html = output_formatter.get_formatted(top_node)
     return text
 
-
-def extract(request, context):
+def extract(request, context, language = None):
     try:
         data = json.loads(request['data'].decode('utf-8'))
-        article = Article(data['link'], language='hu')
+        if language == None:
+            if 'language' in data.keys():
+                language = data['language']
+            else:
+                language = 'hu'
+        article = Article(data['link'], language=language)
         article.download(input_html=data['content'])
         article.parse()
         if article.publish_date:
