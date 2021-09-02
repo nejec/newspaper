@@ -58,7 +58,21 @@ bad_attributes = ['tag', 'photographer', 'related-post', 'read-more', 'caption',
                 'details', 'szerzo', 'lapszam', 'alert', 'pr-box',
                 'calculator', 'description', 'Title', 'ArticleTitle',
                 'gallery', 'mainSource', 'source', 'Source', 'article-series',
-                'disqus', 'donate', 'pr2020kra', 'bmi-calculator', 'bmi-description']
+                'disqus', 'donate', 'pr2020kra', 'bmi-calculator', 'bmi-description',
+                'fc-consent-root', 'fc-dialog-container', 'fc-dialog-content'
+                'qc-cmp2-container', 'qc-cmp2-main', 'qc-cmp2-summary-section'
+                'footer-dialog', 'consent-management-link', 'vendors', 'features', 'purposes',
+                'cc_banner-wrapper', 'cc-window', 'cc-banner', 'cc-type-info', 'cc-theme-block',
+                'notice_div_ribbin', 'eu_cookies',
+                'gdprcookie-wrapper', 'gdprcookie',
+                '_ao-cmp-ui',
+                'CybotCookiebotDialog', 'CybotCookiebotDialogBodyContentText',
+                'cookieChoiceInfo', 'cookie-choices-info', 'cookie-choices-inner',
+                'moove_gdpr_cookie_info_bar', 'moove-gdpr-align-center', 'moove-gdpr-dark-scheme', 'gdpr_infobar_postion_bottom', 'moove-gdpr-info-bar-container', 'moove-gdpr-info-bar-content',
+                'cookie-law-info-bar',
+                'gdpr_box', 'gdpr_text',
+                'cc_banner', 'cc_container', 'cc_container--open'
+]
 caption_strings = ['image', 'picture', 'fotó', 'borító', 'címlap']
 
 

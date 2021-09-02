@@ -29,6 +29,24 @@ class DocumentCleaner(object):
             "|konafilter|KonaFilter|breadcrumbs|^fn$|wp-caption-text"
             "|legende|ajoutVideo|timestamp|js_replies"
         )
+        extended_remove_nodes_re = (
+            "fc-consent-root|fc-dialog-container|fc-dialog-content"
+            "|qc-cmp2-container|qc-cmp2-main|qc-cmp2-summary-section"
+            "|footer-dialog|consent-management-link|vendors|features|purposes"
+            "|cc_banner-wrapper|cc-window|cc-banner|cc-type-info|cc-theme-block"
+            "|notice_div_ribbin|eu_cookies"
+            "|gdprcookie-wrapper|gdprcookie"
+            "|_ao-cmp-ui"
+            "|CybotCookiebotDialog|CybotCookiebotDialogBodyContentText"
+            "|cookieChoiceInfo|cookie-choices-info|cookie-choices-inner"
+            "|moove_gdpr_cookie_info_bar|moove-gdpr-align-center|moove-gdpr-dark-scheme|gdpr_infobar_postion_bottom|moove-gdpr-info-bar-container|moove-gdpr-info-bar-content"
+            "|cookie-law-info-bar"
+            "|gdpr_box|gdpr_text"
+            "|cc_banner|cc_container|cc_container--open"
+            "|jsonrotater"
+            "|grief-module-container"
+        )
+        self.remove_nodes_re += "|" + extended_remove_nodes_re
         # enable adding additional remove patterns through the config object
         if self.config.additional_remove_nodes_re:
             self.remove_nodes_re += '|' + self.config.additional_remove_nodes_re
