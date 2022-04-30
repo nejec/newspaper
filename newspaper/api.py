@@ -19,6 +19,8 @@ from .source import Source
 from .utils import extend_config, print_available_languages
 import json
 import sys
+from pydantic import BaseModel
+from typing import List, Optional
 
 
 def build(url='', dry=False, config=None, **kwargs) -> Source:
@@ -95,16 +97,20 @@ def fulltext(html, language='en'):
     text, article_html = output_formatter.get_formatted(top_node)
     return text
 
-def extract(request, context, language = None):
+class Request(BaseModel):
+    link: str
+    content: str
+    language: Optional[str] = None
+
+def extract(request: Request, language = None):
     try:
-        data = json.loads(request['data'].decode('utf-8'))
         if language == None:
-            if 'language' in data.keys():
-                language = data['language']
+            if request.language is not None:
+                language = request.language
             else:
                 language = 'hu'
-        article = Article(data['link'], language=language)
-        article.download(input_html=data['content'])
+        article = Article(request.link, language=language)
+        article.download(input_html=request.content)
         article.parse()
         if article.publish_date:
                 publish_date_str = article.publish_date.strftime("%Y%m%d-%H:%M:%S")
