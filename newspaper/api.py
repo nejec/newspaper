@@ -21,7 +21,8 @@ import json
 import sys
 from pydantic import BaseModel
 from typing import List, Optional
-
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 def build(url='', dry=False, config=None, **kwargs) -> Source:
     """Returns a constructed source object without
@@ -155,4 +156,4 @@ def extract(request: Request, language = None):
                 'error': str(sys.exc_info()[1].with_traceback(sys.exc_info()[2])),
                 'type': str(sys.exc_info()[0])
                 }
-    return json.dumps(result)
+    return JSONResponse(content=jsonable_encoder(result))
