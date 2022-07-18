@@ -387,7 +387,7 @@ class Article(object):
         text_keyws = list(nlp.keywords(self.text, keyword_count).keys())
         title_keyws = list(nlp.keywords(self.title, keyword_count).keys())
         keyws = set(title_keyws)
-        while len(keyws) < nlp.NUM_KEYWORDS and text_keyws:
+        while len(keyws) < self.config.KEYWORD_COUNT and text_keyws:
             keyws.add(text_keyws.pop(0))
         keyws = list(keyws)
         self.set_keywords(keyws)
